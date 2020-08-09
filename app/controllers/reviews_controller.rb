@@ -13,7 +13,7 @@ class ReviewsController < ApplicationController
     @review = Review.find(params[:id])
     if current_user != @review.user
       flash[:danger] = "You can only delete your own review."
-      redirect_to restaurants_path
+      redirect_to root_path
     else
       @review.destroy
       flash[:danger] = "Review was successfully deleted."

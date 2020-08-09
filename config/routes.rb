@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
-  resources :restaurants do
+	root 'restaurants#index'
+
+  resources :restaurants, except: [:index] do
     resources :reviews
   end
   devise_for :users

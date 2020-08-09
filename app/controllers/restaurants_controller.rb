@@ -6,7 +6,7 @@ class RestaurantsController < ApplicationController
   # GET /restaurants
   # GET /restaurants.json
   def index
-    @restaurants = Restaurant.order("created_at DESC")
+    @restaurants = Restaurant.all.sort_by { |restaurant| restaurant.reviews.average(:rating)}.reverse
   end
 
   # GET /restaurants/1
@@ -80,7 +80,7 @@ class RestaurantsController < ApplicationController
     def require_same_user
       if current_user != @restaurant.user
         flash[:danger] = "Only the owner can edit or delete the restaurant."
-        redirect_to restaurants_path
+        redirect_to root_path
       end
     end
 end
