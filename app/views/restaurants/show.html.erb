@@ -9,6 +9,11 @@
 </p>
 
 <p>
+	<strong>Rating:</strong>
+	<%= @restaurant.reviews.average(:rating) %>
+</p>
+
+<p>
   <strong>User:</strong>
   <%= @restaurant.user_id %>
 </p>
