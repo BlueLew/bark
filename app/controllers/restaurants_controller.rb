@@ -1,6 +1,7 @@
 class RestaurantsController < ApplicationController
   before_action :authenticate_user!, except: [:index, :show]
   before_action :set_restaurant, only: [:show, :edit, :update, :destroy]
+  before_action :require_same_user, only: [:edit, :destroy]
 
   # GET /restaurants
   # GET /restaurants.json
@@ -74,5 +75,12 @@ class RestaurantsController < ApplicationController
     # Only allow a list of trusted parameters through.
     def restaurant_params
       params.require(:restaurant).permit(:name)
+    end
+
+    def require_same_user
+      if current_user != @restaurant.user
+        flash[:danger] = "Only the owner can edit or delete the restaurant."
+        redirect_to restaurants_path
+      end
     end
 end

@@ -1,5 +1,5 @@
 class ReviewsController < ApplicationController
-  before_action :authenticate_user!, except: [:index, :show]
+  before_action :authenticate_user!, except: [:index]
 
   def create
     @restaurant = Restaurant.find(params[:restaurant_id])
@@ -10,10 +10,14 @@ class ReviewsController < ApplicationController
   end
 
   def destroy
-    @restaurant = Restaurant.find(params[:restaurant_id])
-    @review = @restaurant.reviews.find(params[:id])
-    @review.user = current_user
-    @review.destroy
-    redirect_to restaurant_path(@restaurant)
+    @review = Review.find(params[:id])
+    if current_user != @review.user
+      flash[:danger] = "You can only delete your own review."
+      redirect_to restaurants_path
+    else
+      @review.destroy
+      flash[:danger] = "Review was successfully deleted."
+      redirect_to restaurant_path
+    end
   end
 end
