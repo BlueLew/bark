@@ -9,13 +9,21 @@
 </p>
 
 <p>
-	<strong>Rating:</strong>
-	<%= @restaurant.reviews.average(:rating) %>
+	<strong>5 Star Rating:</strong>
+	<%= @restaurant.reviews.average(:rating) %> out of 5
 </p>
 
 <p>
   <strong>User:</strong>
   <%= @restaurant.user_id %>
+</p>
+
+<p>
+	<% if @restaurant.images.attached? %>
+		<% @restaurant.images.each do |image| %>
+	  	<%= image_tag image, style: "width: 200px; display: block" %>
+	  <% end %>
+	<% end %>
 </p>
 
 <%= render 'reviews/form' %>

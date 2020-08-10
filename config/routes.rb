@@ -2,6 +2,7 @@ Rails.application.routes.draw do
 	root 'restaurants#index'
 
   resources :restaurants, except: [:index] do
+  	delete :delete_image_attachment
     resources :reviews
   end
   devise_for :users

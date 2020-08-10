@@ -47,6 +47,11 @@ class RestaurantsController < ApplicationController
   def update
     respond_to do |format|
       if @restaurant.update(restaurant_params)
+        if params[:restaurant][:images].present?
+          params[:restaurant][:images].each do |image|
+            @restaurant.images.attach(image)
+          end
+        end
         format.html { redirect_to @restaurant, notice: 'Restaurant was successfully updated.' }
         format.json { render :show, status: :ok, location: @restaurant }
       else
@@ -64,6 +69,12 @@ class RestaurantsController < ApplicationController
       format.html { redirect_to restaurants_url, notice: 'Restaurant was successfully destroyed.' }
       format.json { head :no_content }
     end
+  end
+
+  def delete_image_attachment
+    @image = ActiveStorage::Attachment.find_by(params[:signed_id]).purge
+    # @image.attachments.first.purge
+    redirect_back(fallback_location: request.referer)
   end
 
   private
