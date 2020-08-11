@@ -1,29 +1,25 @@
-<%= link_to 'Edit', edit_restaurant_path(@restaurant) %> |
-<%= link_to 'Back', root_path %>
+<div class="container">
+  <div class="row justify-content-md-center">
+  	<%= link_to 'Edit', edit_restaurant_path(@restaurant) %> |
+		<%= link_to 'Back', root_path %>
+	</div>
 
-<p>
-  <strong>Name:</strong>
-  <%= @restaurant.name %>
-</p>
-
-<p>
-	<strong>5 Star Rating:</strong>
-	<%= @restaurant.reviews.average(:rating) %> out of 5
-</p>
-
-<p>
-  <strong>User:</strong>
-  <%= @restaurant.user_id %>
-</p>
-
-<p>
-	<% if @restaurant.images.attached? %>
-		<% @restaurant.images.each do |image| %>
-	  	<%= image_tag image, style: "width: 200px; display: block" %>
-	  <% end %>
-	<% end %>
-</p>
-
-<%= render 'reviews/form' %>
-<h2>Reviews</h2>
-<%= render @reviews.order("created_at DESC") if @reviews.any? %>
+	<div class="row justify-content-md-center">
+    <div class="col-8 mt-4">
+      <div class="card text-center shadow mb-5 bg-white rounded">
+        <div class="card-body">
+          <h5 class="card-title"><%= @restaurant.name %></h5>
+          <p class="card-text">Rating:<%= @restaurant.reviews.average(:rating) %> out of 5 Stars</p>
+          <% if @restaurant.images.attached? %>
+						<% @restaurant.images.each do |image| %>
+					  	<%= image_tag image, style: "width: 200px; display: block" %>
+					  <% end %>
+					<% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+	<%= render 'reviews/form' %>
+	<h2>Reviews</h2>
+	<%= render @reviews.order("created_at DESC") if @reviews.any? %>
+</div>
