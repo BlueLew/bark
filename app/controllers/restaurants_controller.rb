@@ -6,7 +6,8 @@ class RestaurantsController < ApplicationController
   # GET /restaurants
   # GET /restaurants.json
   def index
-    @restaurants = Restaurant.all.sort_by { |restaurant| restaurant.reviews.average(:rating)}.reverse
+    # @restaurants = Restaurant.all.sort_by { |restaurant| BigDecimal(restaurant.reviews.average(:rating)).round(5)}.reverse
+    @restaurants = Restaurant.all.sort_by { |restaurant| restaurant.reviews.average(:rating) }.reverse
   end
 
   # GET /restaurants/1
