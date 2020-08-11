@@ -30,11 +30,15 @@ class RestaurantsController < ApplicationController
   def create
     @restaurant = Restaurant.new(restaurant_params)
     @restaurant.user = current_user
-
+    
     respond_to do |format|
       if @restaurant.save
         format.html { redirect_to @restaurant, notice: 'Restaurant was successfully created.' }
         format.json { render :show, status: :created, location: @restaurant }
+        @review = @restaurant.reviews.new
+        @review.user = current_user
+        @review.rating = 5
+        @review.save
       else
         format.html { render :new }
         format.json { render json: @restaurant.errors, status: :unprocessable_entity }
@@ -66,7 +70,7 @@ class RestaurantsController < ApplicationController
   def destroy
     @restaurant.destroy
     respond_to do |format|
-      format.html { redirect_to restaurants_url, notice: 'Restaurant was successfully destroyed.' }
+      format.html { redirect_to root_path, notice: 'Restaurant was successfully destroyed.' }
       format.json { head :no_content }
     end
   end
@@ -85,7 +89,7 @@ class RestaurantsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def restaurant_params
-      params.require(:restaurant).permit(:name)
+      params.require(:restaurant).permit(:name, images: [])
     end
 
     def require_same_user
