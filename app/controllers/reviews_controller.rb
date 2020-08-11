@@ -5,8 +5,14 @@ class ReviewsController < ApplicationController
     @restaurant = Restaurant.find(params[:restaurant_id])
     @review = @restaurant.reviews.new(review_params)
     @review.user = current_user
-    @review.save
-    redirect_to restaurant_path(@restaurant)    
+    if @review.save
+      UserMailer.new_review_email(@restaurant.user).deliver_later
+      flash[:success] = "Thank you for your review!"
+      redirect_to restaurant_path(@restaurant)
+    else
+      flash.now[:error] = "Your review could not be saved, please try again."
+      redirect_to root_path
+    end
   end
 
   def destroy
