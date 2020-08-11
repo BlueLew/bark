@@ -8,6 +8,8 @@ class RestaurantsController < ApplicationController
   def index
     # @restaurants = Restaurant.all.sort_by { |restaurant| BigDecimal(restaurant.reviews.average(:rating)).round(5)}.reverse
     @restaurants = Restaurant.all.sort_by { |restaurant| restaurant.reviews.average(:rating) }.reverse
+    @restaurants = @restaurants.paginate(page: params[:page], per_page: 5)
+    
   end
 
   # GET /restaurants/1
