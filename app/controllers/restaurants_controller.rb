@@ -6,10 +6,8 @@ class RestaurantsController < ApplicationController
   # GET /restaurants
   # GET /restaurants.json
   def index
-    # @restaurants = Restaurant.all.sort_by { |restaurant| BigDecimal(restaurant.reviews.average(:rating)).round(5)}.reverse
-    @restaurants = Restaurant.all.sort_by { |restaurant| restaurant.reviews.average(:rating) }.reverse
+    @restaurants = Restaurant.all.sort_by { |restaurant| [restaurant.reviews.average(:rating) || restaurant.reviews.count] }.reverse
     @restaurants = @restaurants.paginate(page: params[:page], per_page: 5)
-    
   end
 
   # GET /restaurants/1
@@ -38,10 +36,6 @@ class RestaurantsController < ApplicationController
       if @restaurant.save
         format.html { redirect_to @restaurant, notice: 'Restaurant was successfully created.' }
         format.json { render :show, status: :created, location: @restaurant }
-        @review = @restaurant.reviews.new
-        @review.user = current_user
-        @review.rating = 5
-        @review.save
       else
         format.html { render :new }
         format.json { render json: @restaurant.errors, status: :unprocessable_entity }
@@ -92,7 +86,7 @@ class RestaurantsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def restaurant_params
-      params.require(:restaurant).permit(:name, images: [])
+      params.require(:restaurant).permit(:name)
     end
 
     def require_same_user
